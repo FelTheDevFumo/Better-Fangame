@@ -3,23 +3,26 @@ project("Better Fangame")
 
 set(CMAKE_C_STANDARD 99)
 
-# GLFW
-add_subdirectory(external/glfw)
+include(FetchContent)
+FetchContent_Declare(
+    glfw
+    GIT_REPOSITORY https://github.com/glfw/glfw
+    GIT_TAG 3.4
+    FIND_PACKAGE_ARGS
+)
 
-# GLAD
-add_library(glad external/glad/src/glad.c)
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+FetchContent_MakeAvailable(glfw)
+
+add_library(glad
+    external/glad/src/glad.c
+    external/glad/include/glad/glad.h
+)
 target_include_directories(glad PUBLIC external/glad/include)
 
-# Main executable
-add_executable("better_fangame" src/main.c)
-set_target_properties(better_fangame PROPERTIES OUTPUT_NAME "Better Fangame")
+add_executable(Better_Fangame src/main.c)
+set_target_properties(Better_Fangame PROPERTIES OUTPUT_NAME "Better Fangame")
 
-target_include_directories(better_fangame PRIVATE
-    external/glad/include
-    external/glfw/include
-)
-
-target_link_libraries(better_fangame PRIVATE
-    glad
-    glfw
-)
+target_link_libraries(Better_Fangame  PRIVATE glad glfw)
